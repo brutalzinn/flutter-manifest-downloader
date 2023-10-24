@@ -1,14 +1,28 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
+import 'package:manifest_downloader/core/widgets/progressbar/progress_bar_controller.dart';
+
 class ProgressBar extends StatefulWidget {
-  const ProgressBar({super.key});
+  final ProgressBarController progressBarController;
+  const ProgressBar({
+    Key? key,
+    required this.progressBarController,
+  }) : super(key: key);
+
   @override
   // ignore: library_private_types_in_public_api
   _ProgressBarState createState() => _ProgressBarState();
 }
 
 class _ProgressBarState extends State<ProgressBar> {
-  double _progressValue = 0.5; // Initial progress value (from 0.0 to 1.0)
+  @override
+  void initState() {
+    widget.progressBarController.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +34,8 @@ class _ProgressBarState extends State<ProgressBar> {
           children: <Widget>[
             Container(
               height: 20,
-              width: MediaQuery.of(context).size.width - 32, // Set width according to your preference
+              width: MediaQuery.of(context).size.width -
+                  32, // Set width according to your preference
               decoration: BoxDecoration(
                 color: Colors.grey[300], // Background color of the progress bar
                 borderRadius: BorderRadius.circular(10),
@@ -30,29 +45,18 @@ class _ProgressBarState extends State<ProgressBar> {
               left: 0,
               child: Container(
                 height: 20,
-                width: (_progressValue * (MediaQuery.of(context).size.width - 32)),
+                width: (widget.progressBarController.value *
+                    (MediaQuery.of(context).size.width - 32)),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: const DecorationImage(
-                    image: AssetImage('assets/experience_orb.gif'), // Image to fill the progress blocks
-                    fit: BoxFit.none,
+                    image: AssetImage('assets/background.jpg'),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
           ],
-        ),
-        const SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              _progressValue += 0.1;
-              if (_progressValue > 1.0) {
-                _progressValue = 0.0;
-              }
-            });
-          },
-          child: const Text('Increase Progress'),
         ),
       ],
     );

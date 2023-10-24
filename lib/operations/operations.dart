@@ -11,7 +11,8 @@ class Operations {
     var response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       Iterable list = json.decode(response.body);
-      return List<FileModel>.from(list.map((model) => FileModel.fromJson(model)));
+      return List<FileModel>.from(
+          list.map((model) => FileModel.fromJson(model)));
     } else {
       throw Exception('Failed to fetch manifest');
     }
@@ -34,20 +35,22 @@ class Operations {
     }
   }
 
-  Future<void> cleanupOutputDir(List<File> manifestFiles, String outputDir, List<String> ignoreFolders) async {
-    var manifestFileSet =
-        Map<String, String>.fromIterable(manifestFiles, key: (file) => file.path, value: (file) => file.hash);
+  Future<void> cleanupOutputDir(List<FileModel> manifestFiles, String outputDir,
+      List<String> ignoreFolders) async {
+    var manifestFileSet = {
+      for (var file in manifestFiles) file.path: file.hash
+    };
     var files = Directory(outputDir).listSync(recursive: true);
-
     for (var file in files) {
-      if (file is File) {
-        var relativePath = file.path.substring(outputDir.length + 1);
-        if (!ignoreFolders.contains(file.parent.path.split('/').last)) {
-          if (!manifestFileSet.containsKey(relativePath) ||
-              manifestFileSet[relativePath] != await calculateFileHash(file.path)) {
-            await file.delete();
-          }
-        }
+      var relativePath = file.path.substring(outputDir.length + 1);
+      if (ignoreFolders.contains(file.parent.path.split('/').last)) {
+        continue;
+      }
+      final isDiff =
+          manifestFileSet[relativePath] != await calculateFileHash(file.path);
+      final isAtManifest = manifestFileSet.containsKey(relativePath);
+      if (!isAtManifest || isDiff) {
+        await file.delete();
       }
     }
   }
