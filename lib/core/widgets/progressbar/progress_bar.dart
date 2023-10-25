@@ -26,39 +26,10 @@ class _ProgressBarState extends State<ProgressBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Stack(
-          alignment: Alignment.centerLeft,
-          children: <Widget>[
-            Container(
-              height: 20,
-              width: MediaQuery.of(context).size.width -
-                  32, // Set width according to your preference
-              decoration: BoxDecoration(
-                color: Colors.grey[300], // Background color of the progress bar
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            Positioned(
-              left: 0,
-              child: Container(
-                height: 20,
-                width: (widget.progressBarController.value *
-                    (MediaQuery.of(context).size.width - 32)),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: const DecorationImage(
-                    image: AssetImage('assets/background.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
+    return LinearProgressIndicator(
+      color: Colors.yellow,
+      borderRadius: const BorderRadius.all(Radius.circular(30)),
+      value: widget.progressBarController.value,
     );
   }
 }

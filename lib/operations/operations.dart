@@ -43,7 +43,8 @@ class Operations {
       if (ignoreFolders.contains(file.parent.path.split('/').last)) {
         continue;
       }
-      final isDiff = manifestFileSet[relativePath] != await calculateFileHash(file.path);
+      final hash = await calculateFileHash(file.path);
+      final isDiff = manifestFileSet[relativePath] != hash;
       final isAtManifest = manifestFileSet.containsKey(relativePath);
       if (!isAtManifest || isDiff) {
         await file.delete();
