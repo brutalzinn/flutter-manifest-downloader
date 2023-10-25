@@ -1,15 +1,32 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:manifest_downloader/core/utils.dart';
 
 class ProgressBarController extends ChangeNotifier {
-  double maxProgress = 0;
+  num maxProgress = 0;
   double value = 0;
+  String feedback = "";
+
   void done() {
-    value += 1;
+    value += Utils.remapper(value + 0.1, 0, maxProgress, 0, 1);
     notifyListeners();
   }
 
-  void setMaxProgress(int max) {
-    max = max;
+  void reset() {
+    maxProgress = 0;
+    feedback = "";
+    value = 0;
+    notifyListeners();
+  }
+
+  void setMaxProgress(num max) {
+    maxProgress = max;
+    notifyListeners();
+  }
+
+  void setFeedback(String msg) {
+    feedback = msg;
     notifyListeners();
   }
 }

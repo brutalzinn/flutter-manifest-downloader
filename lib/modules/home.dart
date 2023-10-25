@@ -22,6 +22,14 @@ class _ManifestDownloaderState extends State<Home> {
       'http://api-launcher-boberto.boberto.net/modpacks/74b32bbe-8388-4807-bf94-f332f7668857/manifest.json';
 
   @override
+  void initState() {
+    widget.homeLogic.progressController.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
@@ -65,11 +73,15 @@ class _ManifestDownloaderState extends State<Home> {
                   label: 'Select Folder'),
               const SizedBox(height: 20.0),
               Text(
-                'Selected Folder: $_selectedFolder',
+                'Output Folder: $_selectedFolder',
+                style: const TextStyle(fontSize: 16.0, color: Colors.white),
+              ),
+              Text(
+                widget.homeLogic.progressController.feedback,
                 style: const TextStyle(fontSize: 16.0, color: Colors.white),
               ),
               const SizedBox(height: 20.0),
-              ProgressBar(progressBarController: widget.homeLogic.progressController),
+              ProgressBar(value: widget.homeLogic.progressController.value),
               CustomElevatedButton(
                 label: 'Download',
                 onPressed: () {
