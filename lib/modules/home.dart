@@ -1,28 +1,32 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:manifest_downloader/modules/home_logic.dart';
+import 'package:manifest_downloader/modules/widgets/custom_elevated_button.dart';
 
 import '../core/widgets/progressbar/progress_bar.dart';
 import '../core/widgets/progressbar/progress_bar_controller.dart';
+import 'widgets/custom_input_text.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
-  ProgressBarController progressBarController = ProgressBarController();
+  HomeLogic homeLogic = HomeLogic();
 
   @override
   _ManifestDownloaderState createState() => _ManifestDownloaderState();
 }
 
 class _ManifestDownloaderState extends State<Home> {
-  String _selectedFolder = '';
-  String _manifestUrl = '';
+  String _ignoreFolder = '';
+  String _selectedFolder = '/Users/robertopaes/Desktop/testtt';
+  String _manifestUrl =
+      'http://api-launcher-boberto.boberto.net/modpacks/74b32bbe-8388-4807-bf94-f332f7668857/manifest.json';
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(
-              'assets/background.jpg'), // Replace with your background image asset
+          image: AssetImage('assets/background.jpg'), // Replace with your background image asset
           fit: BoxFit.cover,
         ),
       ),
@@ -32,53 +36,46 @@ class _ManifestDownloaderState extends State<Home> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text(
-                'Enter Manifest URL:',
-                style: TextStyle(fontSize: 18.0, color: Colors.white),
-              ),
-              const SizedBox(height: 10.0),
-              TextField(
+              CustomInputText(
+                label: 'Enter Manifest URL:',
                 onChanged: (value) {
                   setState(() {
                     _manifestUrl = value;
                   });
                 },
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.black.withOpacity(0.5),
-                  border: const OutlineInputBorder(),
-                ),
+              ),
+              CustomInputText(
+                label: 'Ignore folders:',
+                onChanged: (value) {
+                  setState(() {
+                    _ignoreFolder = value;
+                  });
+                },
               ),
               const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: () async {
-                  var folder = await FilePicker.platform.getDirectoryPath();
-                  if (folder != null) {
-                    setState(() {
-                      _selectedFolder = folder;
-                    });
-                  }
-                },
-                child: const Text(
-                  'Select Folder',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+              CustomElevatedButton(
+                  onPressed: () async {
+                    var folder = await FilePicker.platform.getDirectoryPath();
+                    if (folder != null) {
+                      setState(() {
+                        _selectedFolder = folder;
+                      });
+                    }
+                  },
+                  label: 'Select Folder'),
               const SizedBox(height: 20.0),
               Text(
                 'Selected Folder: $_selectedFolder',
                 style: const TextStyle(fontSize: 16.0, color: Colors.white),
               ),
               const SizedBox(height: 20.0),
-              ProgressBar(progressBarController: widget.progressBarController),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text(
-                  'Download',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+              ProgressBar(progressBarController: widget.homeLogic.progressController),
+              CustomElevatedButton(
+                label: 'Download',
+                onPressed: () {
+                  widget.homeLogic.startSync(_manifestUrl, _selectedFolder, _ignoreFolder);
+                },
+              )
             ],
           ),
         ),
