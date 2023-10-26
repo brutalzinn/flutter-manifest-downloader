@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
-
+import 'package:manifest_downloader/core/progress/progress.dart';
+import 'package:manifest_downloader/core/progress/progress_bar_controller.dart';
 import 'models/file.dart';
+
+typedef CallbackProgress = void Function(Progress);
 
 class Operations {
   static Future<List<FileModel>> readManifestFiles(String url) async {
@@ -34,16 +38,19 @@ class Operations {
     }
   }
 
-  static Future<void> cleanupOutputDir(
-      List<FileModel> manifestFiles, String outputDir, List<String> ignoreFolders) async {
-    var manifestFileSet = {for (var file in manifestFiles) file.path: file.hash};
+  static Future<void> cleanupOutputDir(List<FileModel> manifestFiles, String outputDir, List<String> ignoreFolders,
+      CallbackProgress callbackAction) async {
     var files = Directory(outputDir).listSync(recursive: true);
+    var manifestFileSet = {for (var file in manifestFiles) file.path: file.hash};
+    final progress = Progress();
     for (var file in files) {
+      progress.setFeedback("verify ${file.parent.path}");
+      callbackAction(progress);
       var relativePath = file.path.substring(outputDir.length + 1);
-      if (ignoreFolders.contains(file.parent.path.split('/').last)) {
-        continue;
-      }
-      if (file is Directory) {
+      final isToIgnore = ignoreFolders.contains(file.parent.path);
+      if (isToIgnore || file is Directory) {
+        progress.setFeedback("ignore ${file.parent.path}");
+        callbackAction(progress);
         continue;
       }
       final hash = await calculateFileHash(file.path);
@@ -51,6 +58,8 @@ class Operations {
       final isAtManifest = manifestFileSet.containsKey(relativePath);
       if (!isAtManifest || isDiff) {
         await file.delete();
+        progress.setFeedback("delete ${file.parent.path}");
+        callbackAction(progress);
       }
     }
   }

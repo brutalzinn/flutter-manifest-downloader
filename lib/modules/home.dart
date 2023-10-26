@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:manifest_downloader/modules/home_logic.dart';
 import 'package:manifest_downloader/modules/widgets/custom_elevated_button.dart';
 
-import '../core/widgets/progressbar/progress_bar.dart';
-import '../core/widgets/progressbar/progress_bar_controller.dart';
+import '../core/config/models/config.dart';
+import '../core/ui/widgets/progressbar/progress_bar.dart';
+import '../core/progress/progress_bar_controller.dart';
 import 'widgets/custom_input_text.dart';
 
 class Home extends StatefulWidget {
@@ -17,15 +18,24 @@ class Home extends StatefulWidget {
 
 class _ManifestDownloaderState extends State<Home> {
   String _ignoreFolder = '';
-  String _selectedFolder = '/Users/robertopaes/Desktop/testtt';
-  String _manifestUrl =
-      'http://api-launcher-boberto.boberto.net/modpacks/74b32bbe-8388-4807-bf94-f332f7668857/manifest.json';
+  String _selectedFolder = '';
+  String _manifestUrl = '';
 
   @override
   void initState() {
     widget.homeLogic.progressController.addListener(() {
       setState(() {});
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      var config = await widget.homeLogic.loadConfig();
+
+      setState(() {
+        _manifestUrl = config.manifestURL;
+        _selectedFolder = config.outputDir;
+        _ignoreFolder = config.ignoreFolders;
+      });
+    });
+
     super.initState();
   }
 
@@ -52,6 +62,7 @@ class _ManifestDownloaderState extends State<Home> {
                   });
                 },
               ),
+              const SizedBox(height: 20.0),
               CustomInputText(
                 label: 'Ignore folders:',
                 onChanged: (value) {
@@ -76,16 +87,27 @@ class _ManifestDownloaderState extends State<Home> {
                 'Output Folder: $_selectedFolder',
                 style: const TextStyle(fontSize: 16.0, color: Colors.white),
               ),
+              const SizedBox(height: 20.0),
               Text(
-                widget.homeLogic.progressController.feedback,
+                widget.homeLogic.progressController.progress.feedback ?? "",
                 style: const TextStyle(fontSize: 16.0, color: Colors.white),
               ),
               const SizedBox(height: 20.0),
-              ProgressBar(value: widget.homeLogic.progressController.value),
+              ProgressBar(value: widget.homeLogic.progressController.progress.value),
+              const SizedBox(height: 20.0),
               CustomElevatedButton(
                 label: 'Download',
                 onPressed: () {
                   widget.homeLogic.startSync(_manifestUrl, _selectedFolder, _ignoreFolder);
+                },
+              ),
+              const SizedBox(height: 20.0),
+              CustomElevatedButton(
+                label: 'Save config',
+                onPressed: () {
+                  final config =
+                      Config(manifestURL: _manifestUrl, outputDir: _selectedFolder, ignoreFolders: _ignoreFolder);
+                  widget.homeLogic.saveConfig(config);
                 },
               )
             ],

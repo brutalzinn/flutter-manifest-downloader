@@ -1,22 +1,28 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+
 import 'package:manifest_downloader/core/utils.dart';
+
+import 'progress.dart';
 
 class ProgressBarController extends ChangeNotifier {
   num maxProgress = 0;
-  double value = 0;
-  String feedback = "";
+  late Progress progress;
+
+  ProgressBarController() {
+    progress = Progress();
+  }
 
   void done() {
-    value += Utils.remapper(value + 0.1, 0, maxProgress, 0, 1);
+    progress.value += Utils.remapper(progress.value + 0.1, 0, maxProgress, 0, 1);
     notifyListeners();
   }
 
   void reset() {
     maxProgress = 0;
-    feedback = "";
-    value = 0;
+    progress.feedback = "";
+    progress.value = 0;
     notifyListeners();
   }
 
@@ -26,7 +32,7 @@ class ProgressBarController extends ChangeNotifier {
   }
 
   void setFeedback(String msg) {
-    feedback = msg;
+    progress.feedback = msg;
     notifyListeners();
   }
 }
