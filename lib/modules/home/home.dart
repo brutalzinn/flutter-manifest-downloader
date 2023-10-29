@@ -19,9 +19,9 @@ class Home extends StatefulWidget {
 }
 
 class _ManifestDownloaderState extends State<Home> {
-  String _ignoreFolder = '';
-  String _selectedFolder = '';
-  String _manifestUrl = '';
+  TextEditingController manifestUrlController = TextEditingController();
+  TextEditingController ignoreFolderController = TextEditingController();
+  TextEditingController outputDirController = TextEditingController();
 
   @override
   void initState() {
@@ -32,9 +32,9 @@ class _ManifestDownloaderState extends State<Home> {
       var config = await widget.homeLogic.loadConfig();
 
       setState(() {
-        _manifestUrl = config.manifestURL;
-        _selectedFolder = config.outputDir;
-        _ignoreFolder = config.ignoreFolders;
+        outputDirController.text = config.outputDir;
+        manifestUrlController.text = config.manifestURL;
+        ignoreFolderController.text = config.ignoreFolders;
       });
     });
 
@@ -57,20 +57,18 @@ class _ManifestDownloaderState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               CustomInputText(
+                controller: manifestUrlController,
                 label: 'Enter Manifest URL:',
                 onChanged: (value) {
-                  setState(() {
-                    _manifestUrl = value;
-                  });
+                  manifestUrlController.text = value;
                 },
               ),
               const SizedBox(height: 20.0),
               CustomInputText(
+                controller: ignoreFolderController,
                 label: 'Ignore folders:',
                 onChanged: (value) {
-                  setState(() {
-                    _ignoreFolder = value;
-                  });
+                  ignoreFolderController.text = value;
                 },
               ),
               const SizedBox(height: 20.0),
@@ -78,15 +76,13 @@ class _ManifestDownloaderState extends State<Home> {
                   onPressed: () async {
                     var folder = await FilePicker.platform.getDirectoryPath();
                     if (folder != null) {
-                      setState(() {
-                        _selectedFolder = folder;
-                      });
+                      outputDirController.text = folder;
                     }
                   },
                   label: 'Select your .minecraft'),
               const SizedBox(height: 20.0),
               Text(
-                'Client Folder: $_selectedFolder',
+                'Client Folder: ${outputDirController.text}',
                 style: const TextStyle(fontSize: 16.0, color: Colors.white),
               ),
               const SizedBox(height: 20.0),
@@ -101,8 +97,8 @@ class _ManifestDownloaderState extends State<Home> {
               CustomElevatedButton(
                 label: 'Download',
                 onPressed: () {
-                  widget.homeLogic
-                      .startSync(_manifestUrl, _selectedFolder, _ignoreFolder);
+                  widget.homeLogic.startSync(manifestUrlController.text,
+                      outputDirController.text, ignoreFolderController.text);
                 },
               ),
               const SizedBox(height: 20.0),
@@ -110,9 +106,9 @@ class _ManifestDownloaderState extends State<Home> {
                 label: 'Save config',
                 onPressed: () {
                   final config = ConfigModel(
-                      manifestURL: _manifestUrl,
-                      outputDir: _selectedFolder,
-                      ignoreFolders: _ignoreFolder);
+                      manifestURL: manifestUrlController.text,
+                      outputDir: outputDirController.text,
+                      ignoreFolders: ignoreFolderController.text);
                   widget.homeLogic.saveConfig(config);
                 },
               )

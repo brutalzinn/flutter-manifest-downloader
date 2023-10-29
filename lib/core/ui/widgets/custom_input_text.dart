@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class CustomInputText extends StatelessWidget {
   final String label;
+  final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   const CustomInputText({
     Key? key,
     required this.label,
+    this.controller,
     this.onChanged,
   }) : super(key: key);
 
@@ -18,6 +20,7 @@ class CustomInputText extends StatelessWidget {
       ),
       const SizedBox(height: 10.0),
       TextField(
+        controller: controller,
         onChanged: onChanged,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(

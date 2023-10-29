@@ -31,12 +31,13 @@ class HomeLogic {
     progressController.reset();
     progressController.setMaxProgress(quantityManifestFiles);
     progressController.setFeedback("start files verify..");
-    final toIgnoreFolders = ignoreFolders.split(" ");
+    final toIgnoreFolders = ignoreFolders.split(",");
     await Operations.cleanupOutputDir(manifestFiles, outputDir, toIgnoreFolders,
         (Progress progress) {
       progressController.setFeedback(progress.feedback ?? "");
       progressController.done();
     });
+    progressController.reset();
     progressController.setFeedback("ready to play.");
   }
 }
