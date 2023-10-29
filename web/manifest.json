@@ -1,6 +1,6 @@
 {
-    "name": "manifest_downloader",
-    "short_name": "manifest_downloader",
+    "name": "flutter_manifest_downloader",
+    "short_name": "flutter_manifest_downloader",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

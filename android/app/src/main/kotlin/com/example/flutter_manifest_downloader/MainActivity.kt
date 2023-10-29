@@ -1,4 +1,4 @@
-package com.example.manifest_downloader
+package com.example.flutter_manifest_downloader
 
 import io.flutter.embedding.android.FlutterActivity
 

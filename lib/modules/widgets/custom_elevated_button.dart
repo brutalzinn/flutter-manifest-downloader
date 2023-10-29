@@ -1,50 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:manifest_downloader/core/resources.dart';
 
-class CustomElevatedButton extends StatelessWidget {
+class CustomElevatedButton extends StatefulWidget {
+  final String label;
+  final VoidCallback? onPressed;
   const CustomElevatedButton({
     Key? key,
     required this.label,
     this.onPressed,
   }) : super(key: key);
+  @override
+  _CustomElevatedButtonState createState() => _CustomElevatedButtonState();
+}
 
-  final String label;
-
-  final VoidCallback? onPressed;
+class _CustomElevatedButtonState extends State<CustomElevatedButton> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: Container(
-        width: 150, // Set the width according to your button size
-        height: 50, // Set the height according to your button size
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/mine_button.png'), // Your Minecraft-style button image
-            fit: BoxFit.fill,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: InkWell(
+        onTap: widget.onPressed,
+        child: Container(
+          width: 200,
+          height: 50,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  Resources.buttonImage), // Replace with your image asset
+              fit: BoxFit.fill,
+            ),
+            border: _isHovered
+                ? Border.all(color: Colors.white, width: 2)
+                : Border.all(color: Colors.transparent, width: 2),
           ),
-        ),
-        child: Center(
-          child: Text(
-            label, // Button text
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+          child: Center(
+            child: Text(
+              widget.label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
           ),
         ),
       ),
     );
-
-    // return Column(children: [
-    //   ElevatedButton(
-    //     onPressed: onPressed,
-    //     child: Text(
-    //       label,
-    //       style: const TextStyle(color: Colors.white),
-    //     ),
-    //   ),
-    // ]);
   }
 }

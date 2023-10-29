@@ -4,7 +4,11 @@ class FileModel {
   String url;
   String hash;
 
-  FileModel({required this.name, required this.path, required this.url, required this.hash});
+  FileModel(
+      {required this.name,
+      required this.path,
+      required this.url,
+      required this.hash});
 
   factory FileModel.fromJson(Map<String, dynamic> json) {
     return FileModel(

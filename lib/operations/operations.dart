@@ -6,11 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 import 'package:manifest_downloader/core/progress/progress.dart';
 import 'package:manifest_downloader/core/progress/progress_bar_controller.dart';
-import 'models/file.dart';
+import 'models/file_model.dart';
 
 typedef CallbackProgress = void Function(Progress);
 
 class Operations {
+  
   static Future<List<FileModel>> readManifestFiles(String url) async {
     var response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
