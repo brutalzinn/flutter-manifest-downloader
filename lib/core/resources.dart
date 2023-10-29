@@ -1,4 +1,4 @@
 class Resources {
-  static String buttonImage = "assets/background.jpg";
+  static String buttonImage = "assets/mine_button.png";
   static String backgroundImage = "assets/background.jpg";
 }

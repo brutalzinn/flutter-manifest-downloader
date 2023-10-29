@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:manifest_downloader/core/managers/config/models/config_model.dart';
 import 'package:manifest_downloader/core/resources.dart';
-import 'package:manifest_downloader/core/ui/widgets/progressbar/progress_bar.dart';
+import 'package:manifest_downloader/core/ui/widgets/custom_elevated_button.dart';
+import 'package:manifest_downloader/core/ui/widgets/custom_input_text.dart';
+import 'package:manifest_downloader/core/ui/widgets/custom_progress_bar.dart';
 
-import '../widgets/custom_elevated_button.dart';
-import '../widgets/custom_input_text.dart';
 import 'logic/home_logic.dart';
 
 // ignore: must_be_immutable
@@ -83,10 +83,10 @@ class _ManifestDownloaderState extends State<Home> {
                       });
                     }
                   },
-                  label: 'Select Folder'),
+                  label: 'Select your .minecraft'),
               const SizedBox(height: 20.0),
               Text(
-                'Output Folder: $_selectedFolder',
+                'Client Folder: $_selectedFolder',
                 style: const TextStyle(fontSize: 16.0, color: Colors.white),
               ),
               const SizedBox(height: 20.0),
@@ -95,7 +95,7 @@ class _ManifestDownloaderState extends State<Home> {
                 style: const TextStyle(fontSize: 16.0, color: Colors.white),
               ),
               const SizedBox(height: 20.0),
-              ProgressBar(
+              CustomProgressBar(
                   value: widget.homeLogic.progressController.progress.value),
               const SizedBox(height: 20.0),
               CustomElevatedButton(
