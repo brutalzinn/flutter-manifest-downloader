@@ -11,5 +11,19 @@
 [x] Save manifest, ignore folders and the minecraft directory
 
 
-![Manifest downloader app](/docs/windows_screen.png "Manifest downloader windows example")
+# Getting start
+
+1. Download the latest release of this application.
+2. Open your Minecraft Manifest Downloader
+3. Setup the Manifest Downloader like the image bellow
+
+![Manifest downloader app](/docs/manifest-downloader-example.png "Manifest downloader windows example")
+
+4. Download the Minecraft version that you need to play like the image bellow ( using tlauncher as example)
+
+![TLauncher alternative](/docs/tlauncher.png "TLauncher example")
+
+5. Click on "Select your .minecraft" and setup the correct path to your Minecraft client like the image bellow. You can use the %appdata% path alias at Windows to open your appdata folder.
+
+![Example about appdata](/docs/appdata.png "Appdata minecraft foldeer")
 

@@ -30,12 +30,9 @@ class _ManifestDownloaderState extends State<Home> {
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       var config = await widget.homeLogic.loadConfig();
-
-      setState(() {
-        outputDirController.text = config.outputDir;
-        manifestUrlController.text = config.manifestURL;
-        ignoreFolderController.text = config.ignoreFolders;
-      });
+      outputDirController.text = config.outputDir;
+      manifestUrlController.text = config.manifestURL;
+      ignoreFolderController.text = config.ignoreFolders;
     });
 
     super.initState();

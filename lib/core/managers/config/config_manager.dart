@@ -12,7 +12,11 @@ class ConfigManager {
       Map<String, dynamic> jsonData = json.decode(contents);
       return ConfigModel.fromJson(jsonData);
     } catch (e) {
-      return ConfigModel(manifestURL: '', outputDir: '', ignoreFolders: '');
+      return ConfigModel(
+          manifestURL: '',
+          outputDir: '',
+          ignoreFolders:
+              'libraries/**,assets/**,config/**,logs/**, loader/**,versions/**,tlauncher_libraries/**,server-resource-packs/**,runtime/**,backup/**,options.txt,servers.dat,TL**,worlds.json');
     }
   }
 
