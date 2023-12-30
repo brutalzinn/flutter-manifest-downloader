@@ -21,7 +21,7 @@ jobs:
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          filename: MacRecoveryX-${{github.ref_name}}-windows.zip
+          filename: FlutterManifestDownloader-${{github.ref_name}}-windows.zip
           directory: build/windows/runner/Release
       - name: Windows Release
         uses: softprops/action-gh-release@v1
@@ -29,4 +29,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: build/windows/runner/Release/MacRecoveryX-${{github.ref_name}}-windows.zip
+          files: build/windows/runner/Release/FlutterManifestDownloader-${{github.ref_name}}-windows.zip
